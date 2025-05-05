@@ -1,9 +1,9 @@
 # Patch to the previous script to add curved corners to the doubler rectangle
 
-import ezdxf
-from ezdxf.math import ConstructionArc
+import doubler_utils as utils
 
-doc = ezdxf.new(dxfversion="R2010")
+# Create new DXF document
+doc = utils.create_document()
 msp = doc.modelspace()
 version = "0.3"
 
@@ -21,27 +21,18 @@ mount_hole_diameter = 0.177
 rivet_diameter = 0.128
 corner_radius = 0.25
 
-
-def add_rounded_rect(msp, x, y, w, h, r):
-    msp.add_line((x + r, y), (x + w - r, y))
-    msp.add_line((x + w, y + r), (x + w, y + h - r))
-    msp.add_line((x + w - r, y + h), (x + r, y + h))
-    msp.add_line((x, y + h - r), (x, y + r))
-    msp.add_arc(center=(x + r, y + r), radius=r, start_angle=180, end_angle=270)
-    msp.add_arc(center=(x + w - r, y + r), radius=r, start_angle=270, end_angle=360)
-    msp.add_arc(center=(x + w - r, y + h - r), radius=r, start_angle=0, end_angle=90)
-    msp.add_arc(center=(x + r, y + h - r), radius=r, start_angle=90, end_angle=180)
-
-
 # Draw rounded rectangle
-add_rounded_rect(msp, 0, 0, width, height, corner_radius)
+utils.add_rounded_rect(msp, 0, 0, width, height, corner_radius)
 
 # Center antenna hole
-msp.add_circle((center_x, center_y), center_hole_diameter / 2)
+utils.add_holes(msp, [(center_x, center_y)], center_hole_diameter)
 
 # Mounting holes
-msp.add_circle((center_x - mount_hole_spacing / 2, center_y), mount_hole_diameter / 2)
-msp.add_circle((center_x + mount_hole_spacing / 2, center_y), mount_hole_diameter / 2)
+mounting_holes = [
+    (center_x - mount_hole_spacing / 2, center_y),
+    (center_x + mount_hole_spacing / 2, center_y)
+]
+utils.add_holes(msp, mounting_holes, mount_hole_diameter)
 
 # Calculate vertical spacing for evenly distributed rivets
 y_spacing = (height - 2*0.3) / 3  # Divide available space into 3 parts to get 4 evenly spaced rivets
@@ -69,11 +60,8 @@ rivet_points = [
     (width - 0.3, 0.3 + 2*y_spacing) # 2/3 up
 ]
 
-for pt in rivet_points:
-    msp.add_circle(pt, rivet_diameter / 2)
+utils.add_holes(msp, rivet_points, rivet_diameter)
 
-# Save file
-dxf_file = f"ci105_doubler_v{version}.dxf"
-doc.saveas(dxf_file)
-
-dxf_file
+# Save files
+file_name = f"build/ci-105-doubler-v{version}"
+utils.save_files(doc, file_name, export_png=True)

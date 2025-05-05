@@ -1,6 +1,7 @@
-import ezdxf
+import doubler_utils as utils
 
-doc = ezdxf.new(dxfversion="R2010")
+# Create new DXF document
+doc = utils.create_document()
 msp = doc.modelspace()
 version = "0.2"
 
@@ -15,23 +16,11 @@ center_hole_diameter = 0.625
 mount_hole_diameter = 0.188
 rivet_hole_diameter = 0.128
 
-
-# Add rounded rectangle
-def add_rounded_rect(msp, x, y, w, h, r):
-    msp.add_line((x + r, y), (x + w - r, y))
-    msp.add_line((x + w, y + r), (x + w, y + h - r))
-    msp.add_line((x + w - r, y + h), (x + r, y + h))
-    msp.add_line((x, y + h - r), (x, y + r))
-    msp.add_arc(center=(x + r, y + r), radius=r, start_angle=180, end_angle=270)
-    msp.add_arc(center=(x + w - r, y + r), radius=r, start_angle=270, end_angle=360)
-    msp.add_arc(center=(x + w - r, y + h - r), radius=r, start_angle=0, end_angle=90)
-    msp.add_arc(center=(x + r, y + h - r), radius=r, start_angle=90, end_angle=180)
-
-
-add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
+# Draw rounded rectangle
+utils.add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
 
 # Center hole
-msp.add_circle((2.75, 1.5), center_hole_diameter / 2)
+utils.add_holes(msp, [(2.75, 1.5)], center_hole_diameter)
 
 # Mount holes
 mount_points = [
@@ -40,8 +29,7 @@ mount_points = [
     (2.00, 2.31),
     (3.75, 2.31),
 ]
-for pt in mount_points:
-    msp.add_circle(pt, mount_hole_diameter / 2)
+utils.add_holes(msp, mount_points, mount_hole_diameter)
 
 # Rivet holes
 rivet_points = [
@@ -58,10 +46,8 @@ rivet_points = [
     (4.70, 1.90),
     (4.70, 2.70),
 ]
-for pt in rivet_points:
-    msp.add_circle(pt, rivet_hole_diameter / 2)
+utils.add_holes(msp, rivet_points, rivet_hole_diameter)
 
-dxf_path = f"ga35_doubler_v{version}.dxf"
-doc.saveas(dxf_path)
-
-dxf_path
+# Save files
+file_name = f"build/ga-37-doubler-v{version}"
+utils.save_files(doc, file_name, export_png=True)
