@@ -2,6 +2,12 @@
 
 This repository contains Python scripts and DXF files for creating antenna doublers for various aircraft models, including RV-14 and GA models.
 
+## SETUP
+
+```bash
+pip3 install 'ezdxf[draw]'
+```
+
 ## Files
 
 - **ci-105-doubler.py**: Script for CI-105 antenna doubler
@@ -14,4 +20,3 @@ This repository contains Python scripts and DXF files for creating antenna doubl
 ## Purpose
 
 These scripts generate doubler plates that reinforce the aircraft skin around antenna installations. The DXF files are ready-to-use templates for manufacturing.
-

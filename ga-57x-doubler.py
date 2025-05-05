@@ -14,7 +14,7 @@ thickness = 0.063
 center_hole_diameter = 0.625
 mount_hole_diameter = 0.203
 rivet_hole_diameter = 0.128
-nutplate_rivet_hole_diameter = 0.098
+rivet_an3_diameter = 0.128
 
 
 def add_rounded_rect(msp, x, y, w, h, r):
@@ -57,7 +57,7 @@ nutplate_rivet_points = [
     (4.43 + nutplate_center_to_rivet_center, 2.55),
 ]
 for pt in nutplate_rivet_points:
-    msp.add_circle(pt, nutplate_rivet_hole_diameter / 2)
+    msp.add_circle(pt, rivet_an3_diameter / 2)
 
 # Rivet holes
 rivet_points = [
