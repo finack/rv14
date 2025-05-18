@@ -73,4 +73,5 @@ utils.add_holes(msp, rivet_points, rivet_an3_diameter)
 
 # Save files
 file_name = f"build/ci-122-doubler-v{version}"
-utils.save_files(doc, file_name, export_png=True)
+# Expected actual width should be about 4.3 inches based on the plate dimensions
+utils.save_files(doc, file_name)

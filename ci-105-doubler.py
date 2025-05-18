@@ -1,67 +1,51 @@
-# Patch to the previous script to add curved corners to the doubler rectangle
+# Design notes
+# - Space between the conn hole and rib is 0.6 (with prob interference)
+# - Using AN4 rivets for strength
 
 import doubler_utils as utils
 
-# Create new DXF document
 doc = utils.create_document()
 msp = doc.modelspace()
 version = "0.3"
 
 # Parameters
-width = 5.0
-center_hole_diameter = 0.563
-# Bottom margin reduced due to interference with rib
-bottom_margin = 0.5 + center_hole_diameter / 2
-top_margin = 1.5 + center_hole_diameter / 2
-height = bottom_margin + top_margin
-center_x = width / 2
-center_y = bottom_margin
+# Antenna is 4.0 x 0.92
+width = 4.0 + 1
+height = 0.92 + 0.5  # Can't go bigger since rib is in the way
+conn_diameter = 0.563
+conn_x_center = width / 2
+conn_y_center = height / 2
 mount_hole_spacing = 1.75
 mount_hole_diameter = 0.177
-rivet_diameter = 0.128
+rivet_an3_diameter = 0.098
+rivet_an4_diameter = 0.1285
+edge_distance = 0.25
 corner_radius = 0.25
 
 # Draw rounded rectangle
 utils.add_rounded_rect(msp, 0, 0, width, height, corner_radius)
 
-# Center antenna hole
-utils.add_holes(msp, [(center_x, center_y)], center_hole_diameter)
+# Connector antenna hole
+utils.add_holes(msp, [(conn_x_center, conn_y_center)], conn_diameter)
 
 # Mounting holes
 mounting_holes = [
-    (center_x - mount_hole_spacing / 2, center_y),
-    (center_x + mount_hole_spacing / 2, center_y)
+    (conn_x_center - mount_hole_spacing / 2, conn_y_center),
+    (conn_x_center + mount_hole_spacing / 2, conn_y_center),
 ]
 utils.add_holes(msp, mounting_holes, mount_hole_diameter)
 
-# Calculate vertical spacing for evenly distributed rivets
-y_spacing = (height - 2*0.3) / 3  # Divide available space into 3 parts to get 4 evenly spaced rivets
-
-# Rivet holes with 0.3" edge distance
 rivet_points = [
-    # Bottom edge
-    (0.3, 0.3),
-    (1.3, 0.3),
-    (3.7, 0.3),
-    (4.7, 0.3),
-    
-    # Top edge
-    (0.3, height - 0.3),
-    (1.3, height - 0.3),
-    (3.7, height - 0.3),
-    (4.7, height - 0.3),
-    
-    # Left edge - 2 additional rivets (corners already counted in top/bottom edges)
-    (0.3, 0.3 + y_spacing),        # 1/3 up
-    (0.3, 0.3 + 2*y_spacing),      # 2/3 up
-    
-    # Right edge - 2 additional rivets (corners already counted in top/bottom edges)
-    (width - 0.3, 0.3 + y_spacing), # 1/3 up
-    (width - 0.3, 0.3 + 2*y_spacing) # 2/3 up
+    (edge_distance, edge_distance),
+    (edge_distance, height / 2),
+    (edge_distance, height - edge_distance),
+    (width - edge_distance, edge_distance),
+    (width - edge_distance, height / 2),
+    (width - edge_distance, height - edge_distance),
 ]
 
-utils.add_holes(msp, rivet_points, rivet_diameter)
+utils.add_holes(msp, rivet_points, rivet_an4_diameter)
 
-# Save files
 file_name = f"build/ci-105-doubler-v{version}"
-utils.save_files(doc, file_name, export_png=True)
+# Expected actual width should be about 4.25 inches based on the plate dimensions
+utils.save_files(doc, file_name)

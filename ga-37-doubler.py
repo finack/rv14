@@ -50,4 +50,5 @@ utils.add_holes(msp, rivet_points, rivet_hole_diameter)
 
 # Save files
 file_name = f"build/ga-37-doubler-v{version}"
-utils.save_files(doc, file_name, export_png=True)
+# Expected actual width is 5 inches based on the plate dimensions
+utils.save_files(doc, file_name)
