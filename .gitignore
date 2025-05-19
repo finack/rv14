@@ -1,0 +1,4 @@
+*.dxf
+build
+
+**/.claude/settings.local.json

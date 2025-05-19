@@ -1,6 +1,7 @@
-import ezdxf
+import doubler_utils as utils
 
-doc = ezdxf.new(dxfversion="R2010")
+# Create new DXF document
+doc = utils.create_document()
 msp = doc.modelspace()
 version = "0.2"
 
@@ -14,50 +15,38 @@ thickness = 0.063
 center_hole_diameter = 0.625
 mount_hole_diameter = 0.203
 rivet_hole_diameter = 0.128
-nutplate_rivet_hole_diameter = 0.098
+rivet_an3_diameter = 0.128
 
-
-def add_rounded_rect(msp, x, y, w, h, r):
-    msp.add_line((x + r, y), (x + w - r, y))
-    msp.add_line((x + w, y + r), (x + w, y + h - r))
-    msp.add_line((x + w - r, y + h), (x + r, y + h))
-    msp.add_line((x, y + h - r), (x, y + r))
-    msp.add_arc(center=(x + r, y + r), radius=r, start_angle=180, end_angle=270)
-    msp.add_arc(center=(x + w - r, y + r), radius=r, start_angle=270, end_angle=360)
-    msp.add_arc(center=(x + w - r, y + h - r), radius=r, start_angle=0, end_angle=90)
-    msp.add_arc(center=(x + r, y + h - r), radius=r, start_angle=90, end_angle=180)
-
-
-add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
+# Draw rounded rectangle
+utils.add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
 
 # Center holes
-msp.add_circle((2.08, 1.75), center_hole_diameter / 2)
-msp.add_circle((3.43, 1.75), center_hole_diameter / 2)
+center_holes = [
+    (2.08, 1.75),
+    (3.43, 1.75)
+]
+utils.add_holes(msp, center_holes, center_hole_diameter)
 
 # Mount holes
-# (x, y)
 mount_points = [
     (1.13, 0.95),
     (4.43, 0.95),
     (1.13, 2.55),
     (4.43, 2.55),
 ]
-for pt in mount_points:
-    msp.add_circle(pt, mount_hole_diameter / 2)
+utils.add_holes(msp, mount_points, mount_hole_diameter)
 
+# Nutplate rivet holes
 nutplate_center_to_rivet_center = 0.344
-nutplate_rivet_points = [
-    (1.13 - nutplate_center_to_rivet_center, 0.95),
-    (1.13 + nutplate_center_to_rivet_center, 0.95),
-    (4.43 - nutplate_center_to_rivet_center, 0.95),
-    (4.43 + nutplate_center_to_rivet_center, 0.95),
-    (1.13 - nutplate_center_to_rivet_center, 2.55),
-    (1.13 + nutplate_center_to_rivet_center, 2.55),
-    (4.43 - nutplate_center_to_rivet_center, 2.55),
-    (4.43 + nutplate_center_to_rivet_center, 2.55),
-]
-for pt in nutplate_rivet_points:
-    msp.add_circle(pt, nutplate_rivet_hole_diameter / 2)
+nutplate_rivet_points = []
+
+for pt in mount_points:
+    nutplate_rivet_points.extend([
+        (pt[0] - nutplate_center_to_rivet_center, pt[1]),
+        (pt[0] + nutplate_center_to_rivet_center, pt[1])
+    ])
+
+utils.add_holes(msp, nutplate_rivet_points, rivet_an3_diameter)
 
 # Rivet holes
 rivet_points = [
@@ -74,10 +63,9 @@ rivet_points = [
     (5.20, 2.24),
     (5.20, 3.20),
 ]
-for pt in rivet_points:
-    msp.add_circle(pt, rivet_hole_diameter / 2)
+utils.add_holes(msp, rivet_points, rivet_hole_diameter)
 
-dxf_path = f"ga57x_doubler_v{version}.dxf"
-doc.saveas(dxf_path)
-
-dxf_path
+# Save files
+file_name = f"build/ga-57x-doubler-v{version}"
+# Expected actual width is 5.5 inches based on the plate dimensions
+utils.save_files(doc, file_name)
