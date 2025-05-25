@@ -6,6 +6,7 @@
 # - Comant Instructions A12206 Rev: A used for dimensions of antenna
 
 import doubler_utils as utils
+from doubler_utils import RIVET_AN3_DIAMETER, RIVET_AN4_DIAMETER
 
 # Create new DXF document
 doc = utils.create_document()
@@ -23,8 +24,6 @@ mount_hole_left_of_center = 1.0
 mount_hole_spacing_y = 1.625
 mount_hole_y_offset = 0.812
 mount_hole_diameter = 0.177
-rivet_an4_diameter = 0.1285
-rivet_an3_diameter = 0.098
 nutplate_rivet_spacing = 0.281
 corner_radius = 0.25
 
@@ -53,7 +52,7 @@ utils.add_holes(msp, mounting_holes, mount_hole_diameter)
 
 # Add nutplate rivet holes
 utils.add_nutplate_rivets(
-    msp, mounting_holes, rivet_an3_diameter, nutplate_rivet_spacing
+    msp, mounting_holes, RIVET_AN3_DIAMETER, nutplate_rivet_spacing
 )
 
 # Add reinforcement rivets
@@ -66,7 +65,7 @@ rivet_points = [
     (width - 0.3, conn_y_center + mount_hole_y_offset),
 ]
 
-utils.add_holes(msp, rivet_points, rivet_an4_diameter)
+utils.add_holes(msp, rivet_points, RIVET_AN4_DIAMETER)
 
 # Save files
 file_name = f"build/ci-122-doubler-v{version}"

@@ -1,9 +1,10 @@
 import doubler_utils as utils
+from doubler_utils import RIVET_AN3_DIAMETER, RIVET_AN4_DIAMETER
 
 # Create new DXF document
 doc = utils.create_document()
 msp = doc.modelspace()
-version = "0.2"
+version = "0.3"
 
 # Plate dimensions
 plate_width = 5.5
@@ -14,39 +15,25 @@ thickness = 0.063
 # Hole specs
 center_hole_diameter = 0.625
 mount_hole_diameter = 0.203
-rivet_hole_diameter = 0.128
-rivet_an3_diameter = 0.128
+nutplate_spacing = 0.344
 
 # Draw rounded rectangle
 utils.add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
 
 # Center holes
-center_holes = [
-    (2.08, 1.75),
-    (3.43, 1.75)
-]
+center_holes = [(2.08, 1.75), (3.43, 1.75)]
 utils.add_holes(msp, center_holes, center_hole_diameter)
 
-# Mount holes
+# Mount holes and nutplate rivets
 mount_points = [
     (1.13, 0.95),
     (4.43, 0.95),
     (1.13, 2.55),
     (4.43, 2.55),
 ]
-utils.add_holes(msp, mount_points, mount_hole_diameter)
-
-# Nutplate rivet holes
-nutplate_center_to_rivet_center = 0.344
-nutplate_rivet_points = []
-
-for pt in mount_points:
-    nutplate_rivet_points.extend([
-        (pt[0] - nutplate_center_to_rivet_center, pt[1]),
-        (pt[0] + nutplate_center_to_rivet_center, pt[1])
-    ])
-
-utils.add_holes(msp, nutplate_rivet_points, rivet_an3_diameter)
+utils.add_nutplate_mounting_holes(
+    msp, mount_points, mount_hole_diameter, RIVET_AN3_DIAMETER, nutplate_spacing
+)
 
 # Rivet holes
 rivet_points = [
@@ -63,7 +50,7 @@ rivet_points = [
     (5.20, 2.24),
     (5.20, 3.20),
 ]
-utils.add_holes(msp, rivet_points, rivet_hole_diameter)
+utils.add_holes(msp, rivet_points, RIVET_AN4_DIAMETER)
 
 # Save files
 file_name = f"build/ga-57x-doubler-v{version}"

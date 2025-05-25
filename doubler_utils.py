@@ -6,6 +6,10 @@ import ezdxf
 from ezdxf.addons.drawing import matplotlib
 from ezdxf import bbox
 
+# Standard rivet diameters (inches)
+RIVET_AN3_DIAMETER = 0.098
+RIVET_AN4_DIAMETER = 0.1285
+
 
 def create_document():
     """Create a new DXF document with R2010 version using inches as units."""
@@ -64,7 +68,7 @@ def add_holes(msp, centers, diameter):
 
 def add_nutplate_rivets(msp, mount_hole_centers, rivet_diameter, spacing):
     """
-    Add nutplate rivet holes for each mounting hole.
+    Add nutplate rivet holes along x-axis for each mounting hole.
 
     Args:
         msp: modelspace object
@@ -73,7 +77,6 @@ def add_nutplate_rivets(msp, mount_hole_centers, rivet_diameter, spacing):
         spacing: spacing between nutplate rivets and mounting hole center
     """
     for hole_center in mount_hole_centers:
-        # Add rivets on each side of the mounting hole (along x-axis)
         msp.add_circle(
             (hole_center[0] - spacing, hole_center[1]),
             rivet_diameter / 2,
@@ -82,6 +85,26 @@ def add_nutplate_rivets(msp, mount_hole_centers, rivet_diameter, spacing):
             (hole_center[0] + spacing, hole_center[1]),
             rivet_diameter / 2,
         )
+
+
+def add_nutplate_mounting_holes(
+    msp, mount_points, mount_hole_diameter, rivet_diameter, nutplate_spacing=0.344
+):
+    """
+    Add mounting holes with corresponding nutplate rivet holes.
+
+    Args:
+        msp: modelspace object
+        mount_points: list of (x, y) coordinates for mounting holes
+        mount_hole_diameter: diameter of the mounting holes
+        rivet_diameter: diameter of the rivet holes for nutplates
+        nutplate_spacing: spacing between nutplate rivets and mounting hole center
+    """
+    # Add the mounting holes
+    add_holes(msp, mount_points, mount_hole_diameter)
+
+    # Add the nutplate rivet holes
+    add_nutplate_rivets(msp, mount_points, rivet_diameter, nutplate_spacing)
 
 
 def save_files(doc, filename):

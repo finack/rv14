@@ -1,9 +1,10 @@
 import doubler_utils as utils
+from doubler_utils import RIVET_AN3_DIAMETER, RIVET_AN4_DIAMETER
 
 # Create new DXF document
 doc = utils.create_document()
 msp = doc.modelspace()
-version = "0.2"
+version = "0.3"
 
 # Plate dimensions
 plate_width = 5.0
@@ -14,7 +15,7 @@ thickness = 0.063
 # Hole specs
 center_hole_diameter = 0.625
 mount_hole_diameter = 0.188
-rivet_hole_diameter = 0.128
+nutplate_spacing = 0.344
 
 # Draw rounded rectangle
 utils.add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
@@ -22,14 +23,16 @@ utils.add_rounded_rect(msp, 0, 0, plate_width, plate_height, corner_radius)
 # Center hole
 utils.add_holes(msp, [(2.75, 1.5)], center_hole_diameter)
 
-# Mount holes
+# Mount holes and nutplate rivets
 mount_points = [
     (2.00, 0.69),
     (3.75, 0.69),
     (2.00, 2.31),
     (3.75, 2.31),
 ]
-utils.add_holes(msp, mount_points, mount_hole_diameter)
+utils.add_nutplate_mounting_holes(
+    msp, mount_points, mount_hole_diameter, RIVET_AN3_DIAMETER, nutplate_spacing
+)
 
 # Rivet holes
 rivet_points = [
@@ -46,9 +49,10 @@ rivet_points = [
     (4.70, 1.90),
     (4.70, 2.70),
 ]
-utils.add_holes(msp, rivet_points, rivet_hole_diameter)
+utils.add_holes(msp, rivet_points, RIVET_AN4_DIAMETER)
 
 # Save files
 file_name = f"build/ga-37-doubler-v{version}"
 # Expected actual width is 5 inches based on the plate dimensions
 utils.save_files(doc, file_name)
+

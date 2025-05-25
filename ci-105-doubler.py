@@ -3,6 +3,7 @@
 # - Using AN4 rivets for strength
 
 import doubler_utils as utils
+from doubler_utils import RIVET_AN3_DIAMETER, RIVET_AN4_DIAMETER
 
 doc = utils.create_document()
 msp = doc.modelspace()
@@ -17,8 +18,6 @@ conn_x_center = width / 2
 conn_y_center = height / 2
 mount_hole_spacing = 1.75
 mount_hole_diameter = 0.177
-rivet_an3_diameter = 0.098
-rivet_an4_diameter = 0.1285
 edge_distance = 0.25
 corner_radius = 0.25
 
@@ -44,7 +43,7 @@ rivet_points = [
     (width - edge_distance, height - edge_distance),
 ]
 
-utils.add_holes(msp, rivet_points, rivet_an4_diameter)
+utils.add_holes(msp, rivet_points, RIVET_AN4_DIAMETER)
 
 file_name = f"build/ci-105-doubler-v{version}"
 # Expected actual width should be about 4.25 inches based on the plate dimensions
