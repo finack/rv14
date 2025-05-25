@@ -7,7 +7,7 @@ from doubler_utils import RIVET_AN3_DIAMETER, RIVET_AN4_DIAMETER
 
 doc = utils.create_document()
 msp = doc.modelspace()
-version = "0.3"
+version = "0.4"  # Updated version with additional rivets
 
 # Parameters
 # Antenna is 4.0 x 0.92
@@ -34,6 +34,7 @@ mounting_holes = [
 ]
 utils.add_holes(msp, mounting_holes, mount_hole_diameter)
 
+# Edge rivets
 rivet_points = [
     (edge_distance, edge_distance),
     (edge_distance, height / 2),
@@ -42,6 +43,17 @@ rivet_points = [
     (width - edge_distance, height / 2),
     (width - edge_distance, height - edge_distance),
 ]
+
+# Add rivets between the mounting holes and edge rivets
+
+edge_rivet_to_midway = edge_distance + (conn_x_center - mount_hole_spacing) / 2
+additional_rivets = [
+    (edge_distance + edge_rivet_to_midway, conn_y_center),
+    (width - edge_distance - edge_rivet_to_midway, conn_y_center),
+]
+
+# Combine all rivet points
+rivet_points.extend(additional_rivets)
 
 utils.add_holes(msp, rivet_points, RIVET_AN4_DIAMETER)
 
