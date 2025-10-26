@@ -1,9 +1,9 @@
-.PHONY: all clean help ci-122 ci-105 ga-37 ga-57x
+.PHONY: all clean help ci-122 ci-105 ga-37 ga-57x gha-15
 
 PYTHON = python3
 BUILD_DIR = build
 
-all: setup ci-105 ci-122 ga-37 ga-57x
+all: setup ci-105 ci-122 ga-37 ga-57x gha-15
 
 setup:
 	mkdir -p $(BUILD_DIR)
@@ -20,6 +20,9 @@ ga-37: setup
 ga-57x: setup
 	$(PYTHON) ga-57x-doubler.py
 
+gha-15: setup
+	$(PYTHON) gha-15-doubler.py
+
 clean:
 	rm -rf $(BUILD_DIR)/*
 
@@ -30,5 +33,6 @@ help:
 	@echo "  ci-105    - Generate CI-105 doubler files"
 	@echo "  ga-37     - Generate GA-37 doubler files"
 	@echo "  ga-57x    - Generate GA-57X doubler files"
+	@echo "  gha-15    - Generate GHA-15 doubler files"
 	@echo "  clean     - Remove all generated files"
 	@echo "  help      - Display this help message"
