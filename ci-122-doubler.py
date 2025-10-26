@@ -11,7 +11,7 @@ from doubler_utils import RIVET_AN3_DIAMETER, RIVET_AN4_DIAMETER
 # Create new DXF document
 doc = utils.create_document()
 msp = doc.modelspace()
-version = "0.1"
+version = "0.2"
 
 # Plate parameters
 width = 4.30
@@ -24,7 +24,7 @@ mount_hole_left_of_center = 1.0
 mount_hole_spacing_y = 1.625
 mount_hole_y_offset = 0.812
 mount_hole_diameter = 0.177
-nutplate_rivet_spacing = 0.281
+nutplate_rivet_spacing = 0.344
 corner_radius = 0.25
 
 # Draw rounded rectangle
