@@ -51,3 +51,23 @@ The generated PDF files include these scale references for proper printing:
 
 These scale references ensure proper scale for manufacturing and easy measurement.
 
+## 3D Printed Tooling
+
+The `tooling/` directory contains OpenSCAD models for 3D printed jigs and tools:
+
+- **DrillGuideBlock.scad**: Drill guide block (31.8mm x 50.8mm x 25mm) with a #12 drill hole for elevator horn drilling
+- **ElevatorHornSpacer.scad**: Small spacer (12.5mm x 5.8mm x 7.5mm) for elevator horn assembly, with embossed text label
+- **WasherWrench.scad**: Dual-ended wrench for AN960 aviation washers (#6, #8, and #10 sizes) with relief slits for flexibility
+- **FloatArmBendTool.scad**: Wire bending tool for IE-F385B fuel sender float arm (0.090" stainless wire). Three-station design:
+  - Station 1 (top): 19.5mm tip bend
+  - Station 2 (front): 95.3mm section bend
+  - Station 3 (back): Diagonal bend (15.1mm offset over 90mm)
+
+### Exporting STL Files
+
+To export an OpenSCAD model for 3D printing:
+
+```bash
+openscad -o output.stl tooling/WasherWrench.scad
+```
+
