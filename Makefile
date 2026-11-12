@@ -1,9 +1,9 @@
-.PHONY: all clean help ci-122 ci-105 ga-37 ga-57x gha-15
+.PHONY: all clean help ci-122 ci-105 ga-37 ga-57x gha-15 monkworkz-controller
 
-PYTHON = python3
+PYTHON = venv/bin/python3
 BUILD_DIR = build
 
-all: setup ci-105 ci-122 ga-37 ga-57x gha-15
+all: setup ci-105 ci-122 ga-37 ga-57x gha-15 monkworkz-controller
 
 setup:
 	mkdir -p $(BUILD_DIR)
@@ -23,6 +23,9 @@ ga-57x: setup
 gha-15: setup
 	$(PYTHON) gha-15-doubler.py
 
+monkworkz-controller: setup
+	$(PYTHON) monkworkz-controller-doubler.py
+
 clean:
 	rm -rf $(BUILD_DIR)/*
 
@@ -34,5 +37,6 @@ help:
 	@echo "  ga-37     - Generate GA-37 doubler files"
 	@echo "  ga-57x    - Generate GA-57X doubler files"
 	@echo "  gha-15    - Generate GHA-15 doubler files"
+	@echo "  monkworkz-controller - Generate Monkworkz controller doubler files"
 	@echo "  clean     - Remove all generated files"
 	@echo "  help      - Display this help message"

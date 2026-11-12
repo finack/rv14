@@ -6,7 +6,7 @@
 width = 31.8;    // X dimension
 height = 50.8;   // Z dimension (tall)
 // Thickness depends on gap between elevator horns
-thickness = 25;  // Y dimension (depth)
+thickness = 18.2625;  // Y dimension (depth) — 23/32"
 
 // Hole parameters
 // #12 drill bit = 0.189" = 4.8mm
