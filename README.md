@@ -51,6 +51,48 @@ The generated PDF files include these scale references for proper printing:
 
 These scale references ensure proper scale for manufacturing and easy measurement.
 
+## Extended Rudder Cable Links
+
+`RudderLinkExtension.scad` extends the link described in
+[this builder's post](https://rv-14a.blogspot.com/2017/10/fuselage-rudder-and-brake-systems.html).
+It uses ten total holes (one more than the post) and displays four separate
+links by default. Use `render_mode="single"` for
+one 3D link or `render_mode="flat"` for one 2D profile. Dimensions are entered
+in inches; OpenSCAD geometry is in millimetres.
+
+The default link is 4.000 × 0.500 × 0.050 inches, with 0.250-inch-radius
+ends. Hole centers start 0.250 inch from the end, then advance 0.750 inch
+to the second hole, followed by eight 0.34375-inch steps. The post also
+suggests checking whether the kit parts use 0.3445-inch adjustment spacing;
+compare your original links before ordering and change
+`adjustment_spacing_in` if appropriate.
+
+The default cut holes are nominal finished #12 diameter, 0.189 inch, with
+`hole_allowance_in=0`. Set `hole_allowance_in=0.015625` to leave 1/64 inch
+for final drilling/reaming instead. There is no added width allowance or
+kerf compensation. Finished-size cuts remain subject to cutting tolerances.
+
+Generate the ordering file with the existing Python environment:
+
+```bash
+venv/bin/python3 export_rudder_link_dxf.py
+```
+
+Upload `build/RudderLinkExtension-sendcutsend.dxf`, select **quantity 4**,
+and specify **0.050-inch 4130 chromoly steel**. SendCutSend currently
+[lists that material and thickness](https://sendcutsend.com/materials/4130-chromoly/)
+and [requests one part per file](https://sendcutsend.com/guidelines/getting-started/).
+The exporter renders the SCAD flat profile, then reconstructs true circular
+holes and semicircular ends in a DXF with explicit inch units. Re-run it
+after changing the SCAD parameters. Do not upload the four-link STL or
+OpenSCAD's raw DXF. Agent runs on macOS may require approval to execute
+OpenSCAD outside the sandbox because of Qt CPU detection restrictions.
+
+These dimensions reproduce a builder modification, not an approved Van's
+drawing. Confirm material condition, link spacing, and installation suitability
+with Van's before manufacture; after checking hole fit and deburring, check
+full rudder travel and pedal clearance against the aircraft plans.
+
 ## 3D Printed Tooling
 
 The `tooling/` directory contains OpenSCAD models for 3D printed jigs and tools:
